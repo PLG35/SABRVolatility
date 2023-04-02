@@ -1,13 +1,10 @@
 #include "test_smile_curve.h"
 #include <iostream>
 
-using namespace std;
-
-int main(int argc, char *argv[])
-{
-    double money = 0.001;
+void launch_tests(){
 
     Test_Sabr myTest_Sabr = Test_Sabr();
+    double money = 0.001;
 
     // TESTING Z
     cout << "Test z" << endl;
@@ -103,6 +100,13 @@ int main(int argc, char *argv[])
         cout << "Test Sabr::dzxzdVovol() general case : FAILED" << endl;
     }
 
+    if(myTest_Sabr.test_dzxzdForward(money, 0.00001, 0.0001)){
+        cout << "Test Sabr::dzxzdForward() general case : PASSED" << endl;
+    }
+    else{
+        cout << "Test Sabr::dzxzdForward() general case : FAILED" << endl;
+    }
+
     // TESTS W
     cout << "Test W" << endl;
 
@@ -113,11 +117,25 @@ int main(int argc, char *argv[])
         cout << "Test Sabr::dWdBeta() general case : FAILED" << endl;
     }
 
+    if(myTest_Sabr.test_dWdForward(money, 0.00001, 0.0001)){
+        cout << "Test Sabr::dWdForward() general case : PASSED" << endl;
+    }
+    else{
+        cout << "Test Sabr::dWdForward() general case : FAILED" << endl;
+    }
+
     if(myTest_Sabr.test_dLfdBeta(money, 0.00001, 0.001)){
         cout << "Test Sabr::dLfdBeta() general case : PASSED" << endl;
     }
     else{
         cout << "Test Sabr::dLfdBeta() general case : FAILED" << endl;
+    }
+
+    if(myTest_Sabr.test_dLfdForward(money, 0.00001, 0.001)){
+        cout << "Test Sabr::dLfdForward() general case : PASSED" << endl;
+    }
+    else{
+        cout << "Test Sabr::dLfdForward() general case : FAILED" << endl;
     }
 
     // TESTS Rf
@@ -149,6 +167,13 @@ int main(int argc, char *argv[])
     }
     else{
         cout << "Test Sabr::dRfdVovol() general case : FAILED" << endl;
+    }
+
+    if(myTest_Sabr.test_dRfdForward(money, 0.00001, 0.0001)){
+        cout << "Test Sabr::dRfdForward() general case : PASSED" << endl;
+    }
+    else{
+        cout << "Test Sabr::dRfdForward() general case : FAILED" << endl;
     }
 
     // Tests volatility
@@ -188,6 +213,4 @@ int main(int argc, char *argv[])
     else{
         cout << "Test Sabr::dSdForward() general case : FAILED" << endl;
     }
-
-    return 0;
 }

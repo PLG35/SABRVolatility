@@ -1,4 +1,5 @@
 #include "test_smile_curve.h"
+#include <iostream>
 #include <math.h>
 #include <cmath>
 
@@ -69,14 +70,14 @@ bool Test_Sabr::test_dzdVovol(double money, double bumpRatio, double precision){
 // Tests XZ
 bool Test_Sabr::test_dxzdz(double money, double bumpRatio, double precision){
     double strike = this->forward + money;
-    double sensitivity = this->dxzdz(strike);
 
     double z1 = this->z(strike);
-    double xz1 = this->xz(strike);
+    double sensitivity = this->dxzdz(strike, z1);
+    double xz1 = this->xz(strike, z1);
 
     double dstrike = strike * bumpRatio;
     double z2 = this->z(strike + dstrike);
-    double xz2 = this->xz(strike + dstrike);
+    double xz2 = this->xz(strike + dstrike, z2);
 
     double variation = (xz2 - xz1) / (z2 - z1);
 
@@ -88,11 +89,13 @@ bool Test_Sabr::test_dxzdAlpha(double money, double bumpRatio, double precision)
     double strike = this->forward + money;
     double sensitivity = this->dxzdAlpha(strike);
 
-    double xz1 = this->xz(strike);
+    double z1 = this->z(strike);
+    double xz1 = this->xz(strike, z1);
 
     double dalpha = alpha * bumpRatio;
     this->setAlpha(this->alpha + dalpha);
-    double xz2 = this->xz(strike);
+    double z2 = this->z(strike);
+    double xz2 = this->xz(strike, z2);
 
     double variation = (xz2 - xz1) / dalpha;
 
@@ -107,11 +110,13 @@ bool Test_Sabr::test_dxzdBeta(double money, double bumpRatio, double precision){
     double strike = this->forward + money;
     double sensitivity = this->dxzdBeta(strike);
 
-    double xz1 = this->xz(strike);
+    double z1 = this->z(strike);
+    double xz1 = this->xz(strike, z1);
 
     double dbeta = beta * bumpRatio;
     this->setBeta(this->beta + dbeta);
-    double xz2 = this->xz(strike);
+    double z2 = this->z(strike);
+    double xz2 = this->xz(strike, z2);
 
     double variation = (xz2 - xz1) / dbeta;
 
@@ -126,11 +131,13 @@ bool Test_Sabr::test_dxzdRho(double money, double bumpRatio, double precision){
     double strike = this->forward + money;
     double sensitivity = this->dxzdRho(strike);
 
-    double xz1 = this->xz(strike);
+    double z1 = this->z(strike);
+    double xz1 = this->xz(strike, z1);
 
     double drho = rho * bumpRatio;
     this->setRho(this->rho + drho);
-    double xz2 = this->xz(strike);
+    double z2 = this->z(strike);
+    double xz2 = this->xz(strike, z2);
 
     double variation = (xz2 - xz1) / drho;
 
@@ -145,11 +152,13 @@ bool Test_Sabr::test_dxzdVovol(double money, double bumpRatio, double precision)
     double strike = this->forward + money;
     double sensitivity = this->dxzdVovol(strike);
 
-    double xz1 = this->xz(strike);
+    double z1 = this->z(strike);
+    double xz1 = this->xz(strike, z1);
 
     double dvovol = vovol * bumpRatio;
     this->setVovol(this->vovol + dvovol);
-    double xz2 = this->xz(strike);
+    double z2 = this->z(strike);
+    double xz2 = this->xz(strike, z2);
 
     double variation = (xz2 - xz1) / dvovol;
 
@@ -237,6 +246,25 @@ bool Test_Sabr::test_dzxzdVovol(double money, double bumpRatio, double precision
     return error < precision;
 }
 
+bool Test_Sabr::test_dzxzdForward(double money, double bumpRatio, double precision){
+    double strike = this->forward + money;
+    double sensitivity = this->dzxzdForward(strike);
+
+    double zxz1 = this->zxz(strike);
+
+    double dForward = this->forward * bumpRatio;
+    this->setForward(this->forward + dForward);
+    double zxz2 = this->zxz(strike);
+
+    double variation = (zxz2 - zxz1) / dForward;
+
+    // Restore beta
+    this->setForward(this->forward - dForward);
+
+    double error = std::abs(sensitivity / variation - 1);
+    return error < precision;
+}
+
 // Tests W
 bool Test_Sabr::test_dWdBeta(double money, double bumpRatio, double precision){
     double strike = this->forward + money;
@@ -257,6 +285,26 @@ bool Test_Sabr::test_dWdBeta(double money, double bumpRatio, double precision){
     return error < precision;
 }
 
+bool Test_Sabr::test_dWdForward(double money, double bumpRatio, double precision){
+    double strike = this->forward + money;
+    double sensitivity = this->dWdForward(strike);
+
+    double W1 = this->W(strike);
+
+    double dForward = this->forward * bumpRatio;
+    this->setForward(this->forward + dForward);
+    double W2 = this->W(strike);
+
+    double variation = (W2 - W1) / dForward;
+
+    // Restore beta
+    this->setForward(this->forward - dForward);
+
+    double error = std::abs(sensitivity / variation - 1);
+    return error < precision;
+}
+
+// Tests Lf
 bool Test_Sabr::test_dLfdBeta(double money, double bumpRatio, double precision){
     double strike = this->forward + money;
     double sensitivity = this->dLfdBeta(strike);
@@ -271,6 +319,25 @@ bool Test_Sabr::test_dLfdBeta(double money, double bumpRatio, double precision){
 
     // Restore beta
     this->setBeta(this->beta - dbeta);
+
+    double error = std::abs(sensitivity / variation - 1);
+    return error < precision;
+}
+
+bool Test_Sabr::test_dLfdForward(double money, double bumpRatio, double precision){
+    double strike = this->forward + money;
+    double sensitivity = this->dLfdForward(strike);
+
+    double Lf1 = this->Lf(strike);
+
+    double dForward = forward * bumpRatio;
+    this->setForward(this->forward + dForward);
+    double Lf2 = this->Lf(strike);
+
+    double variation = (Lf2 - Lf1) / dForward;
+
+    // Restore beta
+    this->setForward(this->forward - dForward);
 
     double error = std::abs(sensitivity / variation - 1);
     return error < precision;
@@ -348,6 +415,25 @@ bool Test_Sabr::test_dRfdVovol(double money, double bumpRatio, double precision)
 
     // Restore beta
     this->setVovol(this->vovol - dvovol);
+
+    double error = std::abs(sensitivity / variation - 1);
+    return error < precision;
+}
+
+bool Test_Sabr::test_dRfdForward(double money, double bumpRatio, double precision){
+    double strike = this->forward + money;
+    double sensitivity = this->dRfdForward(strike);
+
+    double Rf1 = this->Rf(strike);
+
+    double dForward = forward * bumpRatio;
+    this->setForward(this->forward + dForward);
+    double Rf2 = this->Rf(strike);
+
+    double variation = (Rf2 - Rf1) / dForward;
+
+    // Restore beta
+    this->setForward(this->forward - dForward);
 
     double error = std::abs(sensitivity / variation - 1);
     return error < precision;
@@ -436,7 +522,7 @@ bool Test_Sabr::test_dSdForward(double money, double bumpRatio, double precision
 
     double S1 = this->volatility(strike);
 
-    double dforward = forward * bumpRatio;
+    double dforward = this->forward * bumpRatio;
     this->setForward(this->forward + dforward);
     double S2 = this->volatility(strike);
 
