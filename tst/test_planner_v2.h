@@ -87,11 +87,11 @@ protected:
     void addCopyOfTest(TestIntermediates *);
 };
 
-class MainTestPlan
+class PlanUnitaryTestSmile
 {
 public:
-    explicit MainTestPlan();
-    virtual ~MainTestPlan();
+    explicit PlanUnitaryTestSmile();
+    virtual ~PlanUnitaryTestSmile();
 
     void run();
 

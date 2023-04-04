@@ -10,6 +10,7 @@ double Nprime(double x);
 
 #define moneynessDiscontinuityThreshold 0.0000000000001
 #define precisionMachine 0.0000000000001
+#define numberOfParameters 4
 
 class Sabr
 {
@@ -17,7 +18,7 @@ public:
     // Constructor and destructor
     explicit Sabr();
     explicit Sabr(double alpha, double beta, double rho, double vovol, double forward, int t0, int maturity);
-    ~Sabr();
+    virtual ~Sabr();
 
     // Getters
     int getCalDate() const;
@@ -58,25 +59,25 @@ public:
     double d2SdBetadBeta(double strike);
     double d2SdRhodBeta(double strike);
     double d2SdVovoldBeta(double strike);
-    double d2SdForwarddBeta(double strike); // 13% relative error sensi VS variation, but I cannot find any error in the formulas
+    double d2SdForwarddBeta(double strike);     // 13% relative error sensi VS variation, but I cannot find any error in the formulas
 
     double d2SdAlphadRho(double strike);
     double d2SdBetadRho(double strike);
     double d2SdRhodRho(double strike);
-    double d2SdVovoldRho(double strike); // 20% relative error sensi VS variation, but I cannot find any error in the formulas
+    double d2SdVovoldRho(double strike);        // 20% relative error sensi VS variation, but I cannot find any error in the formulas
     double d2SdForwarddRho(double strike);
 
     double d2SdAlphadVovol(double strike);
     double d2SdBetadVovol(double strike);
-    double d2SdRhodVovol(double strike);
+    double d2SdRhodVovol(double strike);        // 20% relative error sensi VS variation, but I cannot find any error in the formulas
     double d2SdVovoldVovol(double strike);
     double d2SdForwarddVovol(double strike);
 
     double d2SdAlphadForward(double strike);
-    double d2SdBetadForward(double strike);
+    double d2SdBetadForward(double strike);     // 13% relative error sensi VS variation, but I cannot find any error in the formulas
     double d2SdRhodForward(double strike);
     double d2SdVovoldForward(double strike);
-    double d2SdForwarddForward(double strike); // 2% relative error sensi VS variation, but I cannot find any error in the formulas
+    double d2SdForwarddForward(double strike);  // 2% relative error sensi VS variation, but I cannot find any error in the formulas
 
 public:
     // Intermediates

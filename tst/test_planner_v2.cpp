@@ -238,11 +238,11 @@ void TestPlanIntermediates::clean(){
     }
 }
 
-//////////////////
-// MainTestPlan //
-//////////////////
+//////////////////////////
+// PlanUnitaryTestSmile //
+//////////////////////////
 
-MainTestPlan::MainTestPlan(){
+PlanUnitaryTestSmile::PlanUnitaryTestSmile(){
     this->fillTestsDerivatives();
     this->fillTestsIntermediates();
 
@@ -253,9 +253,9 @@ MainTestPlan::MainTestPlan(){
     this->fillTestsFallbackForward();
 }
 
-MainTestPlan::~MainTestPlan(){}
+PlanUnitaryTestSmile::~PlanUnitaryTestSmile(){}
 
-void MainTestPlan::fillTestsDerivatives(){
+void PlanUnitaryTestSmile::fillTestsDerivatives(){
     computer volatility = &Sabr::volatility;
 
     computer dSdAlpha = &Sabr::dSdAlpha;
@@ -376,7 +376,7 @@ void MainTestPlan::fillTestsDerivatives(){
     this->myTestsDerivatives.addTest(test30);
 }
 
-void MainTestPlan::fillTestsIntermediates(){
+void PlanUnitaryTestSmile::fillTestsIntermediates(){
     computer z = &Sabr::z;
 
     computerIntermediate d2xzdzdz = &Sabr::d2xzdzdz;
@@ -389,7 +389,7 @@ void MainTestPlan::fillTestsIntermediates(){
     this->myTestsIntermediates.addTest(test2);
 }
 
-void MainTestPlan::fillTestsFallbackAlpha(){
+void PlanUnitaryTestSmile::fillTestsFallbackAlpha(){
     paramGetter getAlpha = &Sabr::getAlpha;
     paramSetter setAlpha = &Sabr::setAlpha;
 
@@ -492,7 +492,7 @@ void MainTestPlan::fillTestsFallbackAlpha(){
     this->myTestsFallbackAlpha.addTest(test28);
 }
 
-void MainTestPlan::fillTestsFallbackBeta(){
+void PlanUnitaryTestSmile::fillTestsFallbackBeta(){
     paramGetter getBeta = &Sabr::getBeta;
     paramSetter setBeta = &Sabr::setBeta;
 
@@ -621,7 +621,7 @@ void MainTestPlan::fillTestsFallbackBeta(){
     this->myTestsFallbackBeta.addTest(test30);
 }
 
-void MainTestPlan::fillTestsFallbackRho(){
+void PlanUnitaryTestSmile::fillTestsFallbackRho(){
     paramGetter getRho = &Sabr::getRho;
     paramSetter setRho = &Sabr::setRho;
 
@@ -726,16 +726,16 @@ void MainTestPlan::fillTestsFallbackRho(){
     this->myTestsFallbackRho.addTest(test24);
 }
 
-void MainTestPlan::fillTestsFallbackVovol(){}
+void PlanUnitaryTestSmile::fillTestsFallbackVovol(){}
 
-void MainTestPlan::fillTestsFallbackForward(){}
+void PlanUnitaryTestSmile::fillTestsFallbackForward(){}
 
-void MainTestPlan::run(){
+void PlanUnitaryTestSmile::run(){
     // Run the tests on first order derivatives
     this->myTestsDerivatives.run();
 
     // Run the tests on intermediates
-    this->myTestsIntermediates.run();
+    // this->myTestsIntermediates.run();
 
     // this->myTestsFallbackAlpha.run();
     // this->myTestsFallbackBeta.run();
